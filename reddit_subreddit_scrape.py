@@ -32,7 +32,7 @@ subreddit_csv_writer.writerow(
     ['ID', 'Name', 'URL', 'Upvotes', 'Upvote Ratio', 'Number of Comments', 'Flairs'])  # Column names
 
 
-posts = reddit.subreddit('news').top('all', limit=20)
+posts = reddit.subreddit('news').top('all', limit=10000)
 
 # for submission in reddit.subreddit('news').top("all", limit=20):
 # print(submission.title)
