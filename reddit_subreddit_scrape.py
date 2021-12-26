@@ -29,41 +29,36 @@ reddit_news_csv = codecs.open(
 subreddit_csv_writer = csv.writer(
     reddit_news_csv, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 subreddit_csv_writer.writerow(
-    ['ID', 'Name', 'URL', 'Flairs'])  # Column names
+    ['ID', 'Name', 'URL', 'Upvotes', 'Upvote Ratio', 'Number of Comments', 'Flairs'])  # Column names
 
 
 posts = reddit.subreddit('news').top('all', limit=20)
 
-for submission in reddit.subreddit('news').top("all", limit=20):
-  print(submission.title)
+# for submission in reddit.subreddit('news').top("all", limit=20):
+# print(submission.title)
 
 
-def handle(saved_models):
+def handle(posts):
   count = 1
-  for model in saved_models:
-    subreddit = model.subreddit  # Subreddit model that the comment/submission belongs to
-    subr_name = subreddit.display_name
-    url = reddit_home_url + model.permalink
+  for post in posts:
+    subr_name = 'news'
+    url = reddit_home_url + post.permalink
 
-    if isinstance(model, praw.models.Submission):  # if the model is a Submission
-      title = model.title
-      nsfw = str(model.over_18)
-      model_type = "#Post"
-      flair = model.link_flair_text
-    else:  # if the model is a Comment
-      title = model.submission.title
-      nsfw = str(model.submission.over_18)
-      model_type = "#Comment"
-      flair = None
+    title = post.title
+    nsfw = str(post.over_18)
+    num_comments = post.num_comments
+    upvotes = post.score
+    upvote_ratio = post.upvote_ratio
+    flair = post.link_flair_text
 
-    print('Post number ' + str(count) + ' is written to csv file.')
+    print('Post #' + str(count) + ' is written to csv file.')
     subreddit_csv_writer.writerow(
-        [str(count), title, url, nsfw, flair])
+        [str(count), title, url, upvotes, upvote_ratio, num_comments, nsfw, flair])
 
     count += 1
 
 
-# handle(posts)
+handle(posts)
 reddit_news_csv.close()
 
 print("\nCompleted!")
